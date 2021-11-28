@@ -24,5 +24,6 @@ async def set_commands(bot: Bot):
     commands = [
         BotCommand(command="/start", description="Запустить бота"),
         BotCommand(command="/view_my_wishes", description="Вывести мои пожелания"),
+        BotCommand(command="/delete_wish", description="Удалить пожелание"),
     ]
     await bot.set_my_commands(commands)
