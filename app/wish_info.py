@@ -17,14 +17,24 @@ class TextWishInfo(WishInfo):
         string_format = kwargs.pop('format', '{}')
         await configuration.bot.send_message(user_id, string_format.format(self.data), **kwargs)
 
+    def __str__(self):
+        return str(self.data)
+
 
 class PhotoWishInfo(WishInfo):
     async def send_to_async(self, user_id, **kwargs):
         kwargs.pop('format', None)
         await configuration.bot.send_photo(user_id, self.data, **kwargs)
 
+    def __str__(self):
+        return 'Фото'
+
 
 class LinkWishInfo(WishInfo):
     async def send_to_async(self, user_id, **kwargs):
         kwargs.pop('format', None)
-        await configuration.bot.send_message(f'{hide_link(user_id)} Хеллоу', self.data, **kwargs)
+        kwargs['parse_mode'] = types.ParseMode.HTML
+        await configuration.bot.send_message(user_id, f'{hide_link(self.data)} Хеллоу', **kwargs)
+
+    def __str__(self):
+        return str(self.data)
