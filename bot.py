@@ -1,6 +1,8 @@
 import asyncio
 from random import randint, shuffle
+from typing import Any, Callable, Union
 
+from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -8,9 +10,10 @@ from aiogram.types import ContentTypes, InlineKeyboardButton
 
 import app.configuration as configuration
 from app.factory import ParticipantFactory
-from app.wish_info import TextWishInfo, LinkWishInfo, PhotoWishInfo
+from app.wish_info import LinkWishInfo, PhotoWishInfo, TextWishInfo
 
-is_admin = lambda message: message.from_user.username == configuration.ADMIN_USERNAME
+is_admin: Callable[[types.Message], Union[bool, Any]] = lambda \
+    message: message.from_user.username == configuration.ADMIN_USERNAME
 
 
 class TextWishState(StatesGroup):
