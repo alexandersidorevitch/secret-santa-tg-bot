@@ -54,15 +54,18 @@ async def celebrate(message: types.Message):
     await start_mailing_async(message)
 
 
-@configuration.dp.message_handler(is_admin, commands=['delete_wish'])
+@configuration.dp.message_handler(commands=['delete_wish'])
 async def delete_wish_command(message: types.Message):
     participant = ParticipantFactory.get_participant(message.from_user)
-    buttons = [
-        InlineKeyboardButton(f'{i + 1}. {wish}', callback_data=f'delete_button_{i}')
-        for i, wish in enumerate(participant.wishes)
-    ]
-    keyboard = get_inline_keyboard(buttons, row_width=2)
-    await message.answer('Выберите что удалить', reply_markup=keyboard)
+    if participant.wishes:
+        buttons = [
+            InlineKeyboardButton(f'{i + 1}. {wish}', callback_data=f'delete_button_{i}')
+            for i, wish in enumerate(participant.wishes)
+        ]
+        keyboard = get_inline_keyboard(buttons, row_width=2)
+        await message.answer('Выберите что удалить', reply_markup=keyboard)
+    else:
+        await message.answer('У вас нечего удалять((')
 
 
 @configuration.dp.callback_query_handler(Text(startswith="delete_button_"))
