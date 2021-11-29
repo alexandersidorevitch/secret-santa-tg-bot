@@ -13,7 +13,7 @@ from app.factory import ParticipantFactory
 from app.wish_info import LinkWishInfo, PhotoWishInfo, TextWishInfo
 
 is_admin: Callable[[types.Message], Union[bool, Any]] = lambda \
-    message: message.from_user.username == configuration.ADMIN_USERNAME
+    message: message.from_user.username == settings.ADMIN_USERNAME
 
 
 class TextWishState(StatesGroup):

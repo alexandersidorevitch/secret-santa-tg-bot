@@ -1,17 +1,11 @@
-import os
-
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import BotCommand
-from dotenv import load_dotenv
-from loguru import logger
 from app.participant_io import ParticipantIO
+from loguru import logger
+import app.settings as settings
 
-load_dotenv()
-
-token = os.getenv('BOT_TOKEN')
-ADMIN_USERNAME = os.getenv('ADMIN_USERNAME')
-bot = Bot(token=token)
+bot = Bot(token=settings.TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 logger.add('logging/file.log', format='{time} {level} {message}', rotation='1 MB', compression='zip',
