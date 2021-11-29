@@ -9,11 +9,12 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ContentTypes, InlineKeyboardButton
 
 import app.configuration as configuration
+import app.settings as settings
 from app.factory import ParticipantFactory
 from app.wish_info import LinkWishInfo, PhotoWishInfo, TextWishInfo
 
 is_admin: Callable[[types.Message], Union[bool, Any]] = lambda \
-    message: message.from_user.username == settings.ADMIN_USERNAME
+        message: message.from_user.username == settings.ADMIN_USERNAME
 
 
 class TextWishState(StatesGroup):
