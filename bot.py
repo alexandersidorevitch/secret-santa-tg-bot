@@ -91,7 +91,7 @@ async def start_mailing_async(message):
 
 
 def get_shuffle_participants():
-    shuffled_participants = tuple(configuration.participant_io.participants.values())
+    shuffled_participants = list(configuration.participant_io.participants.values())
     shuffle(shuffled_participants)
     return shuffled_participants
 
