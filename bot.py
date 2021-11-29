@@ -4,42 +4,48 @@ from typing import Any, Callable, Union
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Text
-from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.dispatcher.filters import AdminFilter, Text
 from aiogram.types import ContentTypes, InlineKeyboardButton
 
 import app.configuration as configuration
 import app.settings as settings
 from app.factory import ParticipantFactory
+from app.states import LinkWishState, PhotoWishState, TextWishState
 from app.wish_info import LinkWishInfo, PhotoWishInfo, TextWishInfo
 
 is_admin: Callable[[types.Message], Union[bool, Any]] = lambda \
         message: message.from_user.username == settings.ADMIN_USERNAME
 
 
-class TextWishState(StatesGroup):
-    wait_for_wish = State()
-
-
-class LinkWishState(StatesGroup):
-    wait_for_wish = State()
-
-
-class PhotoWishState(StatesGroup):
-    wait_for_wish = State()
+class ButtonsConstants:
+    CAPTION_PHOTO_WISH_BUTTON = 'Добавить фото'
+    CAPTION_LINK_WISH_BUTTON = 'Добавить ссылку'
+    CAPTION_TEXT_WISH_BUTTON = 'Добавить текст'
+    CAPTION_CANCEL_BUTTON = 'Отмена'
 
 
 @configuration.dp.message_handler(commands=['start'])
 async def start_bot_command(message: types.Message):
     buttons = [
-        InlineKeyboardButton(text='Добавить пожелание', callback_data='add_wish'),
+        ButtonsConstants.CAPTION_PHOTO_WISH_BUTTON,
+        ButtonsConstants.CAPTION_LINK_WISH_BUTTON,
+        ButtonsConstants.CAPTION_TEXT_WISH_BUTTON,
+        ButtonsConstants.CAPTION_CANCEL_BUTTON,
     ]
-    keyboard = get_inline_keyboard(buttons, row_width=1)
+    keyboard = get_reply_keyboard(buttons, row_width=1)
     await message.answer('[Приведственный текст]', reply_markup=keyboard)
 
 
 def get_inline_keyboard(buttons, **kwargs):
+    kwargs['resize_keyboard'] = True
     keyboard = types.InlineKeyboardMarkup(**kwargs)
+    keyboard.add(*buttons)
+    return keyboard
+
+
+def get_reply_keyboard(buttons, **kwargs):
+    kwargs['resize_keyboard'] = True
+    keyboard = types.ReplyKeyboardMarkup(**kwargs)
     keyboard.add(*buttons)
     return keyboard
 
@@ -105,22 +111,16 @@ async def view_participant_wishes(message):
         await message.answer('У вас не желашек((')
 
 
-@configuration.dp.callback_query_handler(text='add_wish')
-async def add_present(call: types.CallbackQuery):
-    buttons = [
-        InlineKeyboardButton(text='Добавить текстовое описание', callback_data='add_text_wish_button'),
-        InlineKeyboardButton(text='Добавить фото подарка', callback_data='add_photo_wish_button'),
-        InlineKeyboardButton(text='Добавить ссылку на подарок', callback_data='add_link_wish_button')
-    ]
-    keyboard = get_inline_keyboard(buttons, row_width=1)
-
-    await call.message.answer('Выберите что хотите добавить', reply_markup=keyboard)
+@configuration.dp.message_handler(text=ButtonsConstants.CAPTION_CANCEL_BUTTON, state='*', )
+async def cancel_to_added_wish(message: types.Message, state: FSMContext):
+    await state.finish()
+    await message.answer('Володя отмена((')
 
 
-@configuration.dp.callback_query_handler(text='add_text_wish_button', state='*')
-async def add_text_wish_button(call: types.CallbackQuery):
+@configuration.dp.message_handler(text=ButtonsConstants.CAPTION_TEXT_WISH_BUTTON, state='*')
+async def add_text_wish_button(message: types.Message):
     await TextWishState.wait_for_wish.set()
-    await call.message.answer('Введите текст')
+    await message.answer('Введите текст')
 
 
 @configuration.dp.message_handler(state=TextWishState.wait_for_wish, content_types=ContentTypes.TEXT)
@@ -139,13 +139,15 @@ async def add_text_wish(message: types.Message, state: FSMContext):
     await message.answer('Введите текст((')
 
 
-@configuration.dp.callback_query_handler(text='add_link_wish_button', state='*')
-async def add_link_wish_button(call: types.CallbackQuery):
+@configuration.dp.message_handler(text=ButtonsConstants.CAPTION_LINK_WISH_BUTTON, state='*')
+async def add_link_wish_button(message: types.Message):
     await LinkWishState.wait_for_wish.set()
-    await call.message.answer('Введите ссылку')
+    await message.answer('Введите ссылку')
 
 
-@configuration.dp.message_handler(state=LinkWishState.wait_for_wish, content_types=ContentTypes.TEXT)
+@configuration.dp.message_handler(state=LinkWishState.wait_for_wish,
+                                  regexp=r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',
+                                  content_types=ContentTypes.TEXT)
 async def add_link_wish(message: types.Message, state: FSMContext):
     if message.text.strip():
         participant = ParticipantFactory.get_participant(message.from_user)
@@ -164,10 +166,10 @@ async def incorrect_content_type_link_wish(message: types.Message, state: FSMCon
     await message.answer('Отправьте ссылку((')
 
 
-@configuration.dp.callback_query_handler(text='add_photo_wish_button', state='*')
-async def add_photo_wish_button(call: types.CallbackQuery):
+@configuration.dp.message_handler(text=ButtonsConstants.CAPTION_PHOTO_WISH_BUTTON, state='*')
+async def add_photo_wish_button(message: types.Message):
     await PhotoWishState.wait_for_wish.set()
-    await call.message.answer('Введите фото')
+    await message.answer('Введите фото')
 
 
 @configuration.dp.message_handler(state=PhotoWishState.wait_for_wish, content_types=ContentTypes.PHOTO)
