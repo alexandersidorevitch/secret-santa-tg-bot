@@ -1,15 +1,15 @@
 import pickle
 
-from app.participant import Participant
+from app.entities.participant import Participant
 
 
 class ParticipantIO:
-    def __init__(self, filename='participants.pickle'):
+    def __init__(self, filename='participants_info.pickle'):
         self.filename = filename
         self.__participants = dict()
 
     def save(self, participant):
-        self.__participants[participant.id] = self.participants.get(participant.id, participant)
+        self.__participants[participant.unique] = self.participants.get(participant.unique, participant)
         self.__write(self.participants)
 
     def __write(self, data):
