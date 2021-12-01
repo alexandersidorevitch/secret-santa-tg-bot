@@ -26,38 +26,39 @@ def register_buttons_handlers(dp: Dispatcher):
                                 text=text.Buttons.Cancel.CAPTION,
                                 state='*')
 
-    # Register button for appending text description for wish
+    # Register waiting function for wishes
     dp.register_message_handler(TextWishButton.set_message_waiting,
                                 text=text.Buttons.Text.CAPTION,
                                 state='*')
-    dp.register_message_handler(TextWishButton.add_wish,
-                                state=TextWishState.wait_for_wish,
-                                content_types=ContentTypes.TEXT)
-    dp.register_message_handler(TextWishButton.errors_handler,
-                                state=TextWishState.wait_for_wish,
-                                content_types=ContentTypes.ANY)
-
-    # Register button for appending link for wish
     url_regexp = r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$'
     dp.register_message_handler(LinkWishButton.set_message_waiting,
                                 text=text.Buttons.Link.CAPTION,
                                 state='*')
+    dp.register_message_handler(PhotoWishButton.set_message_waiting,
+                                text=text.Buttons.Photo.CAPTION,
+                                state='*')
+
+    # Register function for add wishes
+    dp.register_message_handler(TextWishButton.add_wish,
+                                state=TextWishState.wait_for_wish,
+                                content_types=ContentTypes.TEXT)
     dp.register_message_handler(LinkWishButton.add_wish,
                                 state=LinkWishState.wait_for_wish,
                                 regexp=url_regexp,
                                 content_types=ContentTypes.TEXT)
-    dp.register_message_handler(LinkWishButton.errors_handler,
-                                state=LinkWishState.wait_for_wish,
-                                content_types=ContentTypes.ANY)
-
-    # Register button for appending wish photo
-    dp.register_message_handler(PhotoWishButton.set_message_waiting,
-                                text=text.Buttons.Photo.CAPTION,
-                                state='*')
     dp.register_message_handler(PhotoWishButton.add_wish,
                                 state=PhotoWishState.wait_for_wish,
                                 content_types=ContentTypes.PHOTO,
                                 )
+
+    # Register error handler
+    dp.register_message_handler(TextWishButton.errors_handler,
+                                state=TextWishState.wait_for_wish,
+                                content_types=ContentTypes.ANY)
+    dp.register_message_handler(LinkWishButton.errors_handler,
+                                state=LinkWishState.wait_for_wish,
+                                content_types=ContentTypes.ANY)
+
     dp.register_message_handler(PhotoWishButton.errors_handler,
                                 state=PhotoWishState.wait_for_wish,
                                 content_types=ContentTypes.ANY)
