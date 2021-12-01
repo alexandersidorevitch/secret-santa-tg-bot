@@ -35,18 +35,20 @@ class TextWishButton:
 
     @staticmethod
     async def errors_handler(message: types.Message, state: FSMContext):
-        configuration.logger.info(f'{message.from_user.username} try to add {message.content_type} to text wish')
+        configuration.logger.warning(f'{message.from_user.username} try to add {message.content_type} to text wish')
         await message.answer(text.Buttons.Text.ANSWER_FOR_WRONG_CONTENT_TYPE)
 
 
 class LinkWishButton:
     @staticmethod
     async def set_message_waiting(message: types.Message):
+        configuration.logger.info(f'{message.from_user.username} waiting for add link wish')
         await LinkWishState.wait_for_wish.set()
         await message.answer(text.Buttons.Link.ANSWER)
 
     @staticmethod
     async def add_wish(message: types.Message, state: FSMContext):
+        configuration.logger.info(f'{message.from_user.username} adding link wish')
         participant = ParticipantFactory.get_participant(message.from_user, message.chat.id)
         participant.add_wish(
             LinkWishInfo(message.text)
@@ -57,17 +59,20 @@ class LinkWishButton:
 
     @staticmethod
     async def errors_handler(message: types.Message, state: FSMContext):
+        configuration.logger.warning(f'{message.from_user.username} try to add {message.content_type} to link wish')
         await message.answer(text.Buttons.Link.ANSWER_FOR_WRONG_CONTENT_TYPE)
 
 
 class PhotoWishButton:
     @staticmethod
     async def set_message_waiting(message: types.Message):
+        configuration.logger.info(f'{message.from_user.username} waiting for add photo wish')
         await PhotoWishState.wait_for_wish.set()
         await message.answer(text.Buttons.Photo.ANSWER)
 
     @staticmethod
     async def add_wish(message: types.Message, state: FSMContext):
+        configuration.logger.info(f'{message.from_user.username} adding photo wish')
         participant = ParticipantFactory.get_participant(message.from_user, message.chat.id)
         participant.add_wish(
             PhotoWishInfo(message.photo[-1].file_id)
@@ -78,4 +83,5 @@ class PhotoWishButton:
 
     @staticmethod
     async def errors_handler(message: types.Message, state: FSMContext):
+        configuration.logger.warning(f'{message.from_user.username} try to add {message.content_type} to photo wish')
         await message.answer(text.Buttons.Photo.ANSWER_FOR_WRONG_CONTENT_TYPE)
