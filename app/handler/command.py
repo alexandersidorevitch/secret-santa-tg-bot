@@ -23,6 +23,12 @@ async def celebrate(message: types.Message):
     await start_mailing_async(message)
 
 
+async def view_participants(message: types.Message):
+    configuration.logger.info(f'Admin want to see all participants!!!!!!')
+    for participant in configuration.participants_io.participants:
+        await message.answer(f'{participant.username=} {len(participant.wishes)=}')
+
+
 async def delete_wish_command(message: types.Message):
     configuration.logger.info(f'{message.from_user.username} want to delete wish(')
     participant = ParticipantFactory.get_participant(message.from_user, message.chat.id)

@@ -4,15 +4,18 @@ from aiogram.dispatcher.filters import Text
 from aiogram.types import ContentTypes
 from app.handler.buttons_calback import delete_wish_button
 from app.handler.buttons_message_handler import CancelButton, LinkWishButton, PhotoWishButton, TextWishButton
-from app.handler.command import celebrate, delete_wish_command, start_bot_command, view_wishes_command
+from app.handler.command import celebrate, delete_wish_command, start_bot_command, view_wishes_command, \
+    view_participants
 from app.states import LinkWishState, PhotoWishState, TextWishState
+from app.filters import is_admin
 
 
 def register_commands(dp: Dispatcher):
     dp.register_message_handler(start_bot_command, commands=['start'])
     dp.register_message_handler(view_wishes_command, commands=['view_my_wishes'])
-    dp.register_message_handler(celebrate, commands=['celebrate'])
+    dp.register_message_handler(celebrate, is_admin, commands=['celebrate'])
     dp.register_message_handler(delete_wish_command, commands=['delete_wish'])
+    dp.register_message_handler(view_participants, is_admin, commands=['see_participants'])
 
 
 def register_buttons_callbacks(dp: Dispatcher):
