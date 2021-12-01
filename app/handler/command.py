@@ -23,7 +23,7 @@ async def delete_wish_command(message: types.Message):
     participant = ParticipantFactory.get_participant(message.from_user, message.chat.id)
     if participant.wishes:
         buttons = [
-            InlineKeyboardButton(f'{i + 1}. {wish}', callback_data=f'delete_button_{i}_{len(participant.wishes)}')
+            InlineKeyboardButton(f'{i + 1}. {wish}', callback_data=f'delete_button_{i}_{hash(participant)}')
             for i, wish in enumerate(participant.wishes)
         ]
         keyboard = get_inline_keyboard(buttons, row_width=2)

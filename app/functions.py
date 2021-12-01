@@ -3,6 +3,7 @@ from random import randint, shuffle
 import app.configuration as configuration
 from aiogram import types
 from app.factory import ParticipantFactory
+from app.entities.participant import Participant
 
 
 async def start_mailing_async(message: types.Message):
@@ -33,3 +34,7 @@ async def view_participant_wishes(message: types.Message):
             await wish.send_to_async(participant.chat_id, format='Вы хотели бы {}')
     else:
         await message.answer('У вас не желашек((')
+
+
+def verify_inline_button_callback(participant: Participant, verify_hash: str):
+    return str(hash(participant)) == verify_hash
