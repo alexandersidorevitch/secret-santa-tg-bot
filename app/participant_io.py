@@ -27,6 +27,9 @@ class ParticipantIO:
         if isinstance(value, dict):
             self.__participants = value
 
+    def delete(self, participant):
+        del self.participants[participant.username]
+
     def read(self) -> dict[str, Participant]:
         data = {}
         try:

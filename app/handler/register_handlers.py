@@ -2,12 +2,14 @@ import app.text_markup as text
 from aiogram import Dispatcher
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ContentTypes
+from aiogram.utils.exceptions import BotBlocked
 from app.handler.buttons_calback import delete_wish_button
 from app.handler.buttons_message_handler import CancelButton, LinkWishButton, PhotoWishButton, TextWishButton
 from app.handler.command import celebrate, delete_wish_command, start_bot_command, view_wishes_command, \
     view_participants, incomprehensible_message
 from app.states import LinkWishState, PhotoWishState, TextWishState
 from app.filters import is_admin
+from app.handler.bot_exceptions import error_bot_blocked
 
 
 def register_commands(dp: Dispatcher):
@@ -72,8 +74,13 @@ def register_message_handler(dp: Dispatcher):
                                 content_types=ContentTypes.ANY)
 
 
+def register_error_handler(dp: Dispatcher):
+    dp.errors_handler(error_bot_blocked, BotBlocked)
+
+
 def register_all_handlers(dp: Dispatcher):
     register_commands(dp)
     register_buttons_callbacks(dp)
     register_buttons_handlers(dp)
     register_message_handler(dp)
+    register_error_handler(dp)
