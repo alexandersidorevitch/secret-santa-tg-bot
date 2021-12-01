@@ -1,9 +1,10 @@
 from random import randint, shuffle
 
 import app.configuration as configuration
-from aiogram import types
-from app.factory import ParticipantFactory
+from aiogram import Bot, types
+from aiogram.types import BotCommand
 from app.entities.participant import Participant
+from app.factory import ParticipantFactory
 
 
 async def start_mailing_async(message: types.Message):
@@ -38,3 +39,12 @@ async def view_participant_wishes(message: types.Message):
 
 def verify_inline_button_callback(participant: Participant, verify_hash: str):
     return str(hash(participant)) == verify_hash
+
+
+async def set_commands(bot: Bot):
+    commands = [
+        BotCommand(command="/start", description="Запустить бота"),
+        BotCommand(command="/view_my_wishes", description="Вывести мои пожелания"),
+        BotCommand(command="/delete_wish", description="Удалить пожелание"),
+    ]
+    await bot.set_my_commands(commands)
