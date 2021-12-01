@@ -19,7 +19,7 @@ class WishInfo:
 
 class TextWishInfo(WishInfo):
     async def send_to_async(self, chat_id, **kwargs):
-        string_format = kwargs.pop('format', '{}')
+        string_format = kwargs.pop('format', 'Текстовая хотелка: {}')
         await configuration.bot.send_message(chat_id, string_format.format(self.data), **kwargs)
 
     def __str__(self):
@@ -29,6 +29,7 @@ class TextWishInfo(WishInfo):
 class PhotoWishInfo(WishInfo):
     async def send_to_async(self, chat_id, **kwargs):
         kwargs.pop('format', None)
+        kwargs['caption'] = 'Фотография подарка'
         await configuration.bot.send_photo(chat_id, self.data, **kwargs)
 
     def __str__(self):
@@ -37,9 +38,9 @@ class PhotoWishInfo(WishInfo):
 
 class LinkWishInfo(WishInfo):
     async def send_to_async(self, chat_id, **kwargs):
-        kwargs.pop('format', None)
+        string_format = kwargs.pop('format', 'Ссылка на смысл жизни: {}')
         kwargs['parse_mode'] = types.ParseMode.HTML
-        await configuration.bot.send_message(chat_id, f'{self.data} Хеллоу', **kwargs)
+        await configuration.bot.send_message(chat_id, string_format.format(self.data), **kwargs)
 
     def __str__(self):
         return str(self.data)

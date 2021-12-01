@@ -32,7 +32,7 @@ async def view_participant_wishes(message: types.Message):
     participant = ParticipantFactory.get_participant(message.from_user, message.chat.id)
     if participant.wishes:
         for wish in participant.wishes:
-            await wish.send_to_async(participant.chat_id, format='Вы хотели бы {}')
+            await wish.send_to_async(participant.chat_id)
     else:
         await message.answer('У вас не желашек((')
 
