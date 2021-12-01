@@ -11,8 +11,12 @@ class WishInfo:
 
     async def send_to_async(self, user_id, **kwargs):
         raise NotImplementedError()
+
     def delete(self):
         self.is_deleted = True
+
+    def __hash__(self):
+        return hash(self.data)
 
 
 class TextWishInfo(WishInfo):

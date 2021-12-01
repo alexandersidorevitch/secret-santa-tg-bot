@@ -23,3 +23,6 @@ class Participant:
     def add_wishes(self, *wishes: WishInfo):
         for wish in wishes:
             self.add_wish(wish)
+
+    def __hash__(self):
+        return hash((self.username, tuple(self.wishes)))
