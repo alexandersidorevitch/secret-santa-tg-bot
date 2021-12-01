@@ -25,7 +25,7 @@ async def celebrate(message: types.Message):
 
 async def view_participants(message: types.Message):
     configuration.logger.info(f'Admin want to see all participants!!!!!!')
-    for participant in configuration.participant_io.participants:
+    for participant in configuration.participant_io.participants.values():
         await message.answer(f'{participant.username=} {len(participant.wishes)=}')
 
 
