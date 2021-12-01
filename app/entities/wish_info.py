@@ -1,7 +1,5 @@
-from aiogram import types
-from aiogram.types import InputMediaPhoto
 import app.configuration as configuration
-from aiogram.utils.markdown import hide_link
+from aiogram import types
 
 
 class WishInfo:

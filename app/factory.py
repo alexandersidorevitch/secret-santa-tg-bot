@@ -1,7 +1,5 @@
-from aiogram import types
-from app.entities.participant import Participant
-
 import app.configuration as configuration
+from app.entities.participant import Participant
 
 
 class ParticipantFactory:

@@ -22,5 +22,3 @@ START_REPLY_KEYBOARD = get_reply_keyboard([
     text.Buttons.Photo.CAPTION,
     text.Buttons.Cancel.CAPTION,
 ], row_width=1)
-
-
