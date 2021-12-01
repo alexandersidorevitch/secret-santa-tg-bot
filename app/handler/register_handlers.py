@@ -1,4 +1,4 @@
-import app.text_design as text
+import app.text_markup as text
 from aiogram import Dispatcher
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ContentTypes

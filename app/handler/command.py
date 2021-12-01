@@ -1,4 +1,4 @@
-import app.text_design as text
+import app.text_markup as text
 from aiogram import types
 from aiogram.types import InlineKeyboardButton
 from app.factory import ParticipantFactory
