@@ -5,7 +5,7 @@ from aiogram.types import ContentTypes
 from app.handler.buttons_calback import delete_wish_button
 from app.handler.buttons_message_handler import CancelButton, LinkWishButton, PhotoWishButton, TextWishButton
 from app.handler.command import celebrate, delete_wish_command, start_bot_command, view_wishes_command, \
-    view_participants
+    view_participants, incomprehensible_message
 from app.states import LinkWishState, PhotoWishState, TextWishState
 from app.filters import is_admin
 
@@ -67,7 +67,13 @@ def register_buttons_handlers(dp: Dispatcher):
                                 content_types=ContentTypes.ANY)
 
 
+def register_message_handler(dp: Dispatcher):
+    dp.register_message_handler(incomprehensible_message,
+                                content_types=ContentTypes.ANY)
+
+
 def register_all_handlers(dp: Dispatcher):
     register_commands(dp)
     register_buttons_callbacks(dp)
     register_buttons_handlers(dp)
+    register_message_handler(dp)

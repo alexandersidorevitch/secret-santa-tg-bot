@@ -18,6 +18,10 @@ class Commands:
         WELCOME_TEXT = 'Что дедушке убрать из вашего списка?'
         EMPTY_WISH_LIST = 'Дедушка вам еще ничего не записал('
 
+    class IncomprehensibleMessage:
+        WELCOME_TEXT = 'Дедушка сейчас без очков и не понимает, что вы написали.\n ' \
+                       'Возможно вы хотели прислать, что вы хотите на Новый Год?'
+
 
 class Buttons:
     class Photo:

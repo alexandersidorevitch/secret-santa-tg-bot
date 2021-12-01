@@ -41,3 +41,7 @@ async def delete_wish_command(message: types.Message):
         await message.answer(text.Commands.DeleteWish.WELCOME_TEXT, reply_markup=keyboard)
     else:
         await message.answer(text.Commands.DeleteWish.EMPTY_WISH_LIST)
+
+
+async def incomprehensible_message(message: types.Message):
+    await message.answer(text.Commands.IncomprehensibleMessage.WELCOME_TEXT)
