@@ -11,7 +11,7 @@ from app.factory import ParticipantFactory
 async def start_mailing_async(message: types.Message):
     shuffled_participants = get_shuffle_participants()
     participants_length = len(shuffled_participants)
-    if participants_length:
+    if participants_length >= 2:
         shift = randint(1, participants_length - 1)
         await message.answer(r"Let's go")
         try:
@@ -34,7 +34,7 @@ async def start_mailing_async(message: types.Message):
             raise e
 
     else:
-        await message.answer('Все пусто!')
+        await message.answer(f'Не хватате человек для рассылки {participants_length=}')
 
 
 def get_shuffle_participants():
